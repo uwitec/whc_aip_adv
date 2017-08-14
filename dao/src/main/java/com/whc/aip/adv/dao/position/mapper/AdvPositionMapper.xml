@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.position.AdvPositionMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.position.AdvPosition" >
+    <id column="POSITION_ID" property="positionId" jdbcType="VARCHAR" />
+    <result column="POSITION_NAME" property="positonId" jdbcType="VARCHAR" />
+    <result column="POSITION_CODE" property="positionName" jdbcType="VARCHAR" />
+    <result column="POSITION_TYPE" property="positionType" jdbcType="VARCHAR" />
+    <result column="POSITION_DESCRIPTION" property="positiondescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    POSITION_ID, POSITION_NAME, POSITION_CODE, POSITION_TYPE, POSITION_DESCRIPTION
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.position.AdvPositionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_POSITION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_POSITION
+    where POSITION_ID = #{positionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_POSITION
+    where POSITION_ID = #{positionId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.position.AdvPositionExample" >
+    delete from ADV_POSITION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.position.AdvPosition" >
+    <selectKey resultType="java.lang.String" keyProperty="positionId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_POSITION (POSITION_ID, POSITION_NAME, POSITION_CODE, 
+      POSITION_TYPE, POSITION_DESCRIPTION)
+    values (#{positionId,jdbcType=VARCHAR}, #{positonId,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR}, 
+      #{positionType,jdbcType=VARCHAR}, #{positiondescription,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.position.AdvPosition" >
+    <selectKey resultType="java.lang.String" keyProperty="positionId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_POSITION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      POSITION_ID,
+      <if test="positonId != null" >
+        POSITION_NAME,
+      </if>
+      <if test="positionName != null" >
+        POSITION_CODE,
+      </if>
+      <if test="positionType != null" >
+        POSITION_TYPE,
+      </if>
+      <if test="positiondescription != null" >
+        POSITION_DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{positionId,jdbcType=VARCHAR},
+      <if test="positonId != null" >
+        #{positonId,jdbcType=VARCHAR},
+      </if>
+      <if test="positionName != null" >
+        #{positionName,jdbcType=VARCHAR},
+      </if>
+      <if test="positionType != null" >
+        #{positionType,jdbcType=VARCHAR},
+      </if>
+      <if test="positiondescription != null" >
+        #{positiondescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.position.AdvPositionExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_POSITION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_POSITION
+    <set >
+      <if test="record.positionId != null" >
+        POSITION_ID = #{record.positionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.positonId != null" >
+        POSITION_NAME = #{record.positonId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.positionName != null" >
+        POSITION_CODE = #{record.positionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.positionType != null" >
+        POSITION_TYPE = #{record.positionType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.positiondescription != null" >
+        POSITION_DESCRIPTION = #{record.positiondescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_POSITION
+    set POSITION_ID = #{record.positionId,jdbcType=VARCHAR},
+      POSITION_NAME = #{record.positonId,jdbcType=VARCHAR},
+      POSITION_CODE = #{record.positionName,jdbcType=VARCHAR},
+      POSITION_TYPE = #{record.positionType,jdbcType=VARCHAR},
+      POSITION_DESCRIPTION = #{record.positiondescription,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.position.AdvPosition" >
+    update ADV_POSITION
+    <set >
+      <if test="positonId != null" >
+        POSITION_NAME = #{positonId,jdbcType=VARCHAR},
+      </if>
+      <if test="positionName != null" >
+        POSITION_CODE = #{positionName,jdbcType=VARCHAR},
+      </if>
+      <if test="positionType != null" >
+        POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
+      </if>
+      <if test="positiondescription != null" >
+        POSITION_DESCRIPTION = #{positiondescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where POSITION_ID = #{positionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.position.AdvPosition" >
+    update ADV_POSITION
+    set POSITION_NAME = #{positonId,jdbcType=VARCHAR},
+      POSITION_CODE = #{positionName,jdbcType=VARCHAR},
+      POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
+      POSITION_DESCRIPTION = #{positiondescription,jdbcType=VARCHAR}
+    where POSITION_ID = #{positionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

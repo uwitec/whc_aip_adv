@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.shows.AdvShowsMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.shows.AdvShows" >
+    <id column="SHOWS_ID" property="showsId" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+    <result column="SHOWS_WAHOID" property="showsWahoId" jdbcType="VARCHAR" />
+    <result column="SHOWS_USERID" property="showsUserId" jdbcType="VARCHAR" />
+    <result column="SHOWS_TIME" property="showsTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    SHOWS_ID, ACTIVITY_ID, SHOWS_WAHOID, SHOWS_USERID, SHOWS_TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.shows.AdvShowsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_SHOWS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_SHOWS
+    where SHOWS_ID = #{showsId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_SHOWS
+    where SHOWS_ID = #{showsId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.shows.AdvShowsExample" >
+    delete from ADV_SHOWS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.shows.AdvShows" >
+    <selectKey resultType="java.lang.String" keyProperty="showsId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_SHOWS (SHOWS_ID, ACTIVITY_ID, SHOWS_WAHOID, 
+      SHOWS_USERID, SHOWS_TIME)
+    values (#{showsId,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{showsWahoId,jdbcType=VARCHAR}, 
+      #{showsUserId,jdbcType=VARCHAR}, #{showsTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.shows.AdvShows" >
+    <selectKey resultType="java.lang.String" keyProperty="showsId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_SHOWS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      SHOWS_ID,
+      <if test="activityId != null" >
+        ACTIVITY_ID,
+      </if>
+      <if test="showsWahoId != null" >
+        SHOWS_WAHOID,
+      </if>
+      <if test="showsUserId != null" >
+        SHOWS_USERID,
+      </if>
+      <if test="showsTime != null" >
+        SHOWS_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{showsId,jdbcType=VARCHAR},
+      <if test="activityId != null" >
+        #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="showsWahoId != null" >
+        #{showsWahoId,jdbcType=VARCHAR},
+      </if>
+      <if test="showsUserId != null" >
+        #{showsUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="showsTime != null" >
+        #{showsTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.shows.AdvShowsExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_SHOWS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_SHOWS
+    <set >
+      <if test="record.showsId != null" >
+        SHOWS_ID = #{record.showsId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityId != null" >
+        ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showsWahoId != null" >
+        SHOWS_WAHOID = #{record.showsWahoId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showsUserId != null" >
+        SHOWS_USERID = #{record.showsUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showsTime != null" >
+        SHOWS_TIME = #{record.showsTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_SHOWS
+    set SHOWS_ID = #{record.showsId,jdbcType=VARCHAR},
+      ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      SHOWS_WAHOID = #{record.showsWahoId,jdbcType=VARCHAR},
+      SHOWS_USERID = #{record.showsUserId,jdbcType=VARCHAR},
+      SHOWS_TIME = #{record.showsTime,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.shows.AdvShows" >
+    update ADV_SHOWS
+    <set >
+      <if test="activityId != null" >
+        ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="showsWahoId != null" >
+        SHOWS_WAHOID = #{showsWahoId,jdbcType=VARCHAR},
+      </if>
+      <if test="showsUserId != null" >
+        SHOWS_USERID = #{showsUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="showsTime != null" >
+        SHOWS_TIME = #{showsTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SHOWS_ID = #{showsId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.shows.AdvShows" >
+    update ADV_SHOWS
+    set ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      SHOWS_WAHOID = #{showsWahoId,jdbcType=VARCHAR},
+      SHOWS_USERID = #{showsUserId,jdbcType=VARCHAR},
+      SHOWS_TIME = #{showsTime,jdbcType=VARCHAR}
+    where SHOWS_ID = #{showsId,jdbcType=VARCHAR}
+  </update>
+</mapper>

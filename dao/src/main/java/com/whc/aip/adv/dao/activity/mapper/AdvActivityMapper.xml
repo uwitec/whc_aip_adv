@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.activity.AdvActivityMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.activity.AdvActivity" >
+    <id column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+    <result column="POSITION_ID" property="positionId" jdbcType="VARCHAR" />
+    <result column="CATEGORY_ID" property="categoryId" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_VENDOR" property="activityVendor" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_NAME" property="activityName" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_VALIDFROM" property="activityValidfrom" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_VALIDTO" property="activityValidto" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_STATUS" property="activityStatus" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_DESCRIPTION" property="activityDecription" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_IFDEFAULT" property="activityifdefault" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ACTIVITY_ID, POSITION_ID, CATEGORY_ID, ACTIVITY_VENDOR, ACTIVITY_NAME, ACTIVITY_VALIDFROM, 
+    ACTIVITY_VALIDTO, ACTIVITY_STATUS, ACTIVITY_DESCRIPTION, ACTIVITY_IFDEFAULT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.activity.AdvActivityExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_ACTIVITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_ACTIVITY
+    where ACTIVITY_ID = #{activityId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_ACTIVITY
+    where ACTIVITY_ID = #{activityId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.activity.AdvActivityExample" >
+    delete from ADV_ACTIVITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.activity.AdvActivity" >
+    <selectKey resultType="java.lang.String" keyProperty="activityId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_ACTIVITY (ACTIVITY_ID, POSITION_ID, CATEGORY_ID, 
+      ACTIVITY_VENDOR, ACTIVITY_NAME, ACTIVITY_VALIDFROM, 
+      ACTIVITY_VALIDTO, ACTIVITY_STATUS, ACTIVITY_DESCRIPTION, 
+      ACTIVITY_IFDEFAULT)
+    values (#{activityId,jdbcType=VARCHAR}, #{positionId,jdbcType=VARCHAR}, #{categoryId,jdbcType=VARCHAR}, 
+      #{activityVendor,jdbcType=VARCHAR}, #{activityName,jdbcType=VARCHAR}, #{activityValidfrom,jdbcType=VARCHAR}, 
+      #{activityValidto,jdbcType=VARCHAR}, #{activityStatus,jdbcType=VARCHAR}, #{activityDecription,jdbcType=VARCHAR}, 
+      #{activityifdefault,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.activity.AdvActivity" >
+    <selectKey resultType="java.lang.String" keyProperty="activityId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_ACTIVITY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ACTIVITY_ID,
+      <if test="positionId != null" >
+        POSITION_ID,
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID,
+      </if>
+      <if test="activityVendor != null" >
+        ACTIVITY_VENDOR,
+      </if>
+      <if test="activityName != null" >
+        ACTIVITY_NAME,
+      </if>
+      <if test="activityValidfrom != null" >
+        ACTIVITY_VALIDFROM,
+      </if>
+      <if test="activityValidto != null" >
+        ACTIVITY_VALIDTO,
+      </if>
+      <if test="activityStatus != null" >
+        ACTIVITY_STATUS,
+      </if>
+      <if test="activityDecription != null" >
+        ACTIVITY_DESCRIPTION,
+      </if>
+      <if test="activityifdefault != null" >
+        ACTIVITY_IFDEFAULT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{activityId,jdbcType=VARCHAR},
+      <if test="positionId != null" >
+        #{positionId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityVendor != null" >
+        #{activityVendor,jdbcType=VARCHAR},
+      </if>
+      <if test="activityName != null" >
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityValidfrom != null" >
+        #{activityValidfrom,jdbcType=VARCHAR},
+      </if>
+      <if test="activityValidto != null" >
+        #{activityValidto,jdbcType=VARCHAR},
+      </if>
+      <if test="activityStatus != null" >
+        #{activityStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="activityDecription != null" >
+        #{activityDecription,jdbcType=VARCHAR},
+      </if>
+      <if test="activityifdefault != null" >
+        #{activityifdefault,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.activity.AdvActivityExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_ACTIVITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_ACTIVITY
+    <set >
+      <if test="record.activityId != null" >
+        ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.positionId != null" >
+        POSITION_ID = #{record.positionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryId != null" >
+        CATEGORY_ID = #{record.categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityVendor != null" >
+        ACTIVITY_VENDOR = #{record.activityVendor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityName != null" >
+        ACTIVITY_NAME = #{record.activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityValidfrom != null" >
+        ACTIVITY_VALIDFROM = #{record.activityValidfrom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityValidto != null" >
+        ACTIVITY_VALIDTO = #{record.activityValidto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityStatus != null" >
+        ACTIVITY_STATUS = #{record.activityStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityDecription != null" >
+        ACTIVITY_DESCRIPTION = #{record.activityDecription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityifdefault != null" >
+        ACTIVITY_IFDEFAULT = #{record.activityifdefault,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_ACTIVITY
+    set ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      POSITION_ID = #{record.positionId,jdbcType=VARCHAR},
+      CATEGORY_ID = #{record.categoryId,jdbcType=VARCHAR},
+      ACTIVITY_VENDOR = #{record.activityVendor,jdbcType=VARCHAR},
+      ACTIVITY_NAME = #{record.activityName,jdbcType=VARCHAR},
+      ACTIVITY_VALIDFROM = #{record.activityValidfrom,jdbcType=VARCHAR},
+      ACTIVITY_VALIDTO = #{record.activityValidto,jdbcType=VARCHAR},
+      ACTIVITY_STATUS = #{record.activityStatus,jdbcType=VARCHAR},
+      ACTIVITY_DESCRIPTION = #{record.activityDecription,jdbcType=VARCHAR},
+      ACTIVITY_IFDEFAULT = #{record.activityifdefault,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.activity.AdvActivity" >
+    update ADV_ACTIVITY
+    <set >
+      <if test="positionId != null" >
+        POSITION_ID = #{positionId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID = #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityVendor != null" >
+        ACTIVITY_VENDOR = #{activityVendor,jdbcType=VARCHAR},
+      </if>
+      <if test="activityName != null" >
+        ACTIVITY_NAME = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityValidfrom != null" >
+        ACTIVITY_VALIDFROM = #{activityValidfrom,jdbcType=VARCHAR},
+      </if>
+      <if test="activityValidto != null" >
+        ACTIVITY_VALIDTO = #{activityValidto,jdbcType=VARCHAR},
+      </if>
+      <if test="activityStatus != null" >
+        ACTIVITY_STATUS = #{activityStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="activityDecription != null" >
+        ACTIVITY_DESCRIPTION = #{activityDecription,jdbcType=VARCHAR},
+      </if>
+      <if test="activityifdefault != null" >
+        ACTIVITY_IFDEFAULT = #{activityifdefault,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ACTIVITY_ID = #{activityId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.activity.AdvActivity" >
+    update ADV_ACTIVITY
+    set POSITION_ID = #{positionId,jdbcType=VARCHAR},
+      CATEGORY_ID = #{categoryId,jdbcType=VARCHAR},
+      ACTIVITY_VENDOR = #{activityVendor,jdbcType=VARCHAR},
+      ACTIVITY_NAME = #{activityName,jdbcType=VARCHAR},
+      ACTIVITY_VALIDFROM = #{activityValidfrom,jdbcType=VARCHAR},
+      ACTIVITY_VALIDTO = #{activityValidto,jdbcType=VARCHAR},
+      ACTIVITY_STATUS = #{activityStatus,jdbcType=VARCHAR},
+      ACTIVITY_DESCRIPTION = #{activityDecription,jdbcType=VARCHAR},
+      ACTIVITY_IFDEFAULT = #{activityifdefault,jdbcType=VARCHAR}
+    where ACTIVITY_ID = #{activityId,jdbcType=VARCHAR}
+  </update>
+</mapper>

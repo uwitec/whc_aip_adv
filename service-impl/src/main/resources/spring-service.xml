@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+
+    <import resource="spring-mybatis.xml"/>
+    <!--自动扫描的包名,管理所有使用注解的类-->
+    <context:component-scan base-package="com.whc.aip.adv.*"/>
+    <!--读写分离-->
+    <bean id="replicationDataSourceAspect" class="com.wanhuchina.common.util.datasource.RWDataSourceAspect"/>
+    <aop:config>
+        <aop:aspect id="c" ref="replicationDataSourceAspect" order="1">
+            <aop:pointcut id="mapperTx" expression="execution( * com.whc.aip.adv.service.impl..*.*(..))"/>
+            <aop:before method="before" pointcut-ref="mapperTx"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- 事务管理 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 使用annotation定义事务 -->
+    <!-- 开发人员自己要明确哪个方法需要开启事务，在该方法上添加Annotation即可 -->
+    <!-- 例如：@Transactional(propagation = Propagation.REQUIRED) -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--mongo-->
+    <bean id="defaultMongoTypeMapper"
+          class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">
+        <constructor-arg name="typeKey">
+            <null/>
+        </constructor-arg>
+    </bean>
+    <bean id="mappingContext" class="org.springframework.data.mongodb.core.mapping.MongoMappingContext"/>
+    <bean id="mappingMongoConverter" class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+        <constructor-arg name="mappingContext" ref="mappingContext"/>
+        <property name="typeMapper" ref="defaultMongoTypeMapper"/>
+    </bean>
+    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+        <constructor-arg name="mongoConverter" ref="mappingMongoConverter"/>
+    </bean>
+    <mongo:db-factory host="${mongo.host}" port="${mongo.port}" dbname="${mongo.dbname}" username="${mongo.username}" password="${mongo.password}"/>
+    <!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes -->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <!-- http连接池 -->
+    <bean id="pollingConnectionManager" class="org.apache.http.impl.conn.PoolingHttpClientConnectionManager">
+        <property name="maxTotal" value="500"/>
+        <property name="defaultMaxPerRoute" value="500"/>
+    </bean>
+
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create">
+        <property name="connectionManager" ref="pollingConnectionManager"/>
+    </bean>
+
+    <!-- httpclient -->
+    <bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build"/>
+    <bean id="clientHttpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+        <constructor-arg ref="httpClient"/>
+        <property name="connectTimeout" value="5000"/>
+        <property name="readTimeout" value="10000"/>
+    </bean>
+
+    <!--&lt;!&ndash;redis的集群模式  开始&ndash;&gt;-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="5"></property>
+        <property name="maxIdle" value="3"></property>
+        <property name="minIdle" value="2"></property>
+        <property name="maxWaitMillis" value="15000"></property>
+        <property name="minEvictableIdleTimeMillis" value="300000"></property>
+        <property name="numTestsPerEvictionRun" value="3"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"></property>
+        <property name="testOnBorrow" value="true"></property>
+        <property name="testOnReturn" value="true"></property>
+        <property name="testWhileIdle" value="true"></property>
+    </bean>
+    <bean id="redisSentinelConfiguration" class="com.wanhuchina.common.util.redis.KyRedisSentinelConfiguration">
+        <property name="kyMasterName" value="${sentinel.mastername}"/>
+        <property name="kySentinels" value="${sentinel.hosts}"/>
+    </bean>
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          destroy-method="destroy">
+        <constructor-arg ref="redisSentinelConfiguration"/>
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+    </bean>
+    <!-- redis template-->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+        <!-- 序列化方式 建议key/hashKey采用StringRedisSerializer-->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+        <property name="hashValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+
+
+    <!-- Rabbit MQ -->
+    <!-- 连接服务配置  -->
+    <rabbit:connection-factory id="connectionFactory" addresses="${rabbitMq.address}" username="${rabbitMq.username}" password="${rabbitMq.password}" />
+    <rabbit:admin connection-factory="connectionFactory"/>
+    <!-- queue 队列声明-->
+    <rabbit:queue id="order_ToBaspquene" durable="true" auto-delete="false" exclusive="false" name="order_ToBaspquene"/>
+
+    <!-- exchange queue binging key 绑定 -->
+    <rabbit:direct-exchange name="my-mq-exchange" durable="true" auto-delete="false" id="my-mq-exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="order_ToBaspquene" key="order_ToBaspquene_key"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <!-- spring template声明-->
+    <rabbit:template exchange="my-mq-exchange" id="amqpTemplate"  connection-factory="connectionFactory" />
+    <!--监听接收订单BASP消息-->
+    <!--<bean id="orderGetBaspMqListener" class="com.kaiyuan.platform.dfb_transaction.service.impl.order.OrderGetBaspMqListener"></bean>-->
+    <!--<bean id="ofPayPhoneGetBaspMqListener" class="com.kaiyuan.platform.dfb_transaction.service.impl.pay.OfPayPhoneGetBaspMqListener"></bean>-->
+    <!--<rabbit:listener-container connection-factory="connectionFactory" acknowledge="auto" >-->
+    <!--<rabbit:listener queues="order_GetBaspquene" ref="orderGetBaspMqListener"/>-->
+    <!--</rabbit:listener-container>-->
+    <!-- 可以通过 ApplicationContext 获取Bean -->
+</beans>

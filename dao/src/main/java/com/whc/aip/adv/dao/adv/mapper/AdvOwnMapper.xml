@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.whc.aip.adv.dao.adv.AdvOwnMapper" >
+    <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.response.JsonAdvResult" >
+        <result column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+        <result column="CONTENT_IMAGEURL" property="imgUrl" jdbcType="VARCHAR" />
+        <result column="CONTENT_URL" property="contentUrl" jdbcType="VARCHAR" />
+        <result column="CONTENT_ID" property="contentId" jdbcType="VARCHAR" />
+        <result column="SHOWTIME_TIMEFROM" property="timeFrom" jdbcType="VARCHAR" />
+        <result column="SHOWTIME_TIMETO" property="timeTo" jdbcType="VARCHAR" />
+        <result column="SHOWRANGE_WAHOID" property="wahoId" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <resultMap id="getWahoIdMap" type="com.whc.aip.adv.model.utils.getWahoId">
+        <result column="WAHO_ID" property="wahoId" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="getWahoIdByOrderId" resultMap="getWahoIdMap">
+      	select w.waho_id from whc_order o
+          left join whc_warehouse_cell wc
+          on o.wahoce_id = wc.wahoce_id
+          left join whc_warehouse w
+          on wc.waho_id = w.waho_id
+          where o.order_id =#{orderId}
+
+    </select>
+
+    <select id="AdvDefaultInfoWace" resultMap="BaseResultMap">
+      	select act.activity_id,st.showtime_timefrom,st.showtime_timeto,con.content_id,sr.showrange_wahoid,con.content_imageurl,con.content_url
+          from adv_activity act
+          left join adv_content con
+          on con.activity_id = act.activity_id
+          left join  adv_position posi
+          on act.position_id = posi.position_id
+          left join adv_showrange sr
+          on sr.activity_id = act.activity_id
+          left join adv_showtime st
+          on act.activity_id = st.activity_id
+          where posi.position_code = '1' and act.activity_ifdefault='1'
+    </select>
+
+
+    <select id="AdvDefaultInfoOrderEnd" resultMap="BaseResultMap">
+ 		 select act.activity_id,st.showtime_timefrom,st.showtime_timeto,con.content_id,sr.showrange_wahoid,con.content_imageurl,con.content_url
+          from adv_activity act
+          left join adv_content con
+          on con.activity_id = act.activity_id
+          left join  adv_position posi
+          on act.position_id = posi.position_id
+          left join adv_showrange sr
+          on sr.activity_id = act.activity_id
+          left join adv_showtime st
+          on act.activity_id = st.activity_id
+          where posi.position_code = '2' and act.activity_ifdefault='1'
+    </select>
+
+    <select id="AdvPutInWace" resultMap="BaseResultMap">
+
+        select act.activity_id,st.showtime_timefrom,st.showtime_timeto,con.content_id,sr.showrange_wahoid,con.content_imageurl,con.content_url
+        from adv_activity act
+        left join adv_content con
+        on con.activity_id = act.activity_id
+        left join  adv_position posi
+        on act.position_id = posi.position_id
+        left join adv_showrange sr
+        on sr.activity_id = act.activity_id
+        left join adv_showtime st
+        on act.activity_id = st.activity_id
+        where sr.showrange_wahoid =#{wahoId}
+        and posi.position_code = '1'
+        <![CDATA[and to_char(sysdate,'yyyy-mm-dd')<=st.showtime_dateto and to_char(sysdate,'yyyy-mm-dd')<= st.showtime_dateto]]>
+    </select>
+
+
+    <select id="AdvPutInOrderEnd" resultMap="BaseResultMap">
+        select act.activity_id,st.showtime_timefrom,st.showtime_timeto,con.content_id,sr.showrange_wahoid,con.content_imageurl,con.content_url
+        from adv_activity act
+        left join adv_content con
+        on con.activity_id = act.activity_id
+        left join  adv_position posi
+        on act.position_id = posi.position_id
+        left join adv_showrange sr
+        on sr.activity_id = act.activity_id
+        left join adv_showtime st
+        on act.activity_id = st.activity_id
+        where sr.showrange_wahoid =#{wahoId}
+        and posi.position_code = '2'
+        <![CDATA[and to_char(sysdate,'yyyy-mm-dd')<=st.showtime_dateto and to_char(sysdate,'yyyy-mm-dd')<= st.showtime_dateto]]>
+    </select>
+
+</mapper>

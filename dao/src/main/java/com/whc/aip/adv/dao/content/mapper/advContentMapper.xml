@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.content.advContentMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.content.advContent" >
+    <id column="CONTENT_ID" property="contentId" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+    <result column="CONTENT_TITLE" property="contentTitle" jdbcType="VARCHAR" />
+    <result column="CONTENT_IMAGEURL" property="contentImageurl" jdbcType="VARCHAR" />
+    <result column="CONTENT_TYPE" property="contentType" jdbcType="VARCHAR" />
+    <result column="CONTENT_URL" property="contentUrl" jdbcType="VARCHAR" />
+    <result column="CONTENT_INDEX" property="contentIndex" jdbcType="VARCHAR" />
+    <result column="CONTENT_DESCRIPTION" property="contentDescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CONTENT_ID, ACTIVITY_ID, CONTENT_TITLE, CONTENT_IMAGEURL, CONTENT_TYPE, CONTENT_URL, 
+    CONTENT_INDEX, CONTENT_DESCRIPTION
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.content.advContentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_CONTENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_CONTENT
+    where CONTENT_ID = #{contentId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_CONTENT
+    where CONTENT_ID = #{contentId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.content.advContentExample" >
+    delete from ADV_CONTENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.content.advContent" >
+    <selectKey resultType="java.lang.String" keyProperty="contentId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_CONTENT (CONTENT_ID, ACTIVITY_ID, CONTENT_TITLE, 
+      CONTENT_IMAGEURL, CONTENT_TYPE, CONTENT_URL, 
+      CONTENT_INDEX, CONTENT_DESCRIPTION)
+    values (#{contentId,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{contentTitle,jdbcType=VARCHAR}, 
+      #{contentImageurl,jdbcType=VARCHAR}, #{contentType,jdbcType=VARCHAR}, #{contentUrl,jdbcType=VARCHAR}, 
+      #{contentIndex,jdbcType=VARCHAR}, #{contentDescription,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.content.advContent" >
+    <selectKey resultType="java.lang.String" keyProperty="contentId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_CONTENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      CONTENT_ID,
+      <if test="activityId != null" >
+        ACTIVITY_ID,
+      </if>
+      <if test="contentTitle != null" >
+        CONTENT_TITLE,
+      </if>
+      <if test="contentImageurl != null" >
+        CONTENT_IMAGEURL,
+      </if>
+      <if test="contentType != null" >
+        CONTENT_TYPE,
+      </if>
+      <if test="contentUrl != null" >
+        CONTENT_URL,
+      </if>
+      <if test="contentIndex != null" >
+        CONTENT_INDEX,
+      </if>
+      <if test="contentDescription != null" >
+        CONTENT_DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{contentId,jdbcType=VARCHAR},
+      <if test="activityId != null" >
+        #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentTitle != null" >
+        #{contentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="contentImageurl != null" >
+        #{contentImageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="contentUrl != null" >
+        #{contentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="contentIndex != null" >
+        #{contentIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="contentDescription != null" >
+        #{contentDescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.content.advContentExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_CONTENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_CONTENT
+    <set >
+      <if test="record.contentId != null" >
+        CONTENT_ID = #{record.contentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityId != null" >
+        ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentTitle != null" >
+        CONTENT_TITLE = #{record.contentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentImageurl != null" >
+        CONTENT_IMAGEURL = #{record.contentImageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentType != null" >
+        CONTENT_TYPE = #{record.contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentUrl != null" >
+        CONTENT_URL = #{record.contentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentIndex != null" >
+        CONTENT_INDEX = #{record.contentIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentDescription != null" >
+        CONTENT_DESCRIPTION = #{record.contentDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_CONTENT
+    set CONTENT_ID = #{record.contentId,jdbcType=VARCHAR},
+      ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      CONTENT_TITLE = #{record.contentTitle,jdbcType=VARCHAR},
+      CONTENT_IMAGEURL = #{record.contentImageurl,jdbcType=VARCHAR},
+      CONTENT_TYPE = #{record.contentType,jdbcType=VARCHAR},
+      CONTENT_URL = #{record.contentUrl,jdbcType=VARCHAR},
+      CONTENT_INDEX = #{record.contentIndex,jdbcType=VARCHAR},
+      CONTENT_DESCRIPTION = #{record.contentDescription,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.content.advContent" >
+    update ADV_CONTENT
+    <set >
+      <if test="activityId != null" >
+        ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentTitle != null" >
+        CONTENT_TITLE = #{contentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="contentImageurl != null" >
+        CONTENT_IMAGEURL = #{contentImageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        CONTENT_TYPE = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="contentUrl != null" >
+        CONTENT_URL = #{contentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="contentIndex != null" >
+        CONTENT_INDEX = #{contentIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="contentDescription != null" >
+        CONTENT_DESCRIPTION = #{contentDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CONTENT_ID = #{contentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.content.advContent" >
+    update ADV_CONTENT
+    set ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      CONTENT_TITLE = #{contentTitle,jdbcType=VARCHAR},
+      CONTENT_IMAGEURL = #{contentImageurl,jdbcType=VARCHAR},
+      CONTENT_TYPE = #{contentType,jdbcType=VARCHAR},
+      CONTENT_URL = #{contentUrl,jdbcType=VARCHAR},
+      CONTENT_INDEX = #{contentIndex,jdbcType=VARCHAR},
+      CONTENT_DESCRIPTION = #{contentDescription,jdbcType=VARCHAR}
+    where CONTENT_ID = #{contentId,jdbcType=VARCHAR}
+  </update>
+</mapper>

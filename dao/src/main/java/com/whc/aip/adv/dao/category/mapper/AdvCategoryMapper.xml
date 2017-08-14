@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.category.AdvCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.category.AdvCategory" >
+    <id column="CATEGORY_ID" property="categoryId" jdbcType="VARCHAR" />
+    <result column="CATEGORY_CODE" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="CATEGORY_NAME" property="categoryName" jdbcType="VARCHAR" />
+    <result column="CATEGORY_SERIALNO" property="categorySerialno" jdbcType="VARCHAR" />
+    <result column="CATEGORY_PARENTID" property="categoryParentid" jdbcType="VARCHAR" />
+    <result column="CATEGORY_DESCRIPTION" property="categoryDescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CATEGORY_ID, CATEGORY_CODE, CATEGORY_NAME, CATEGORY_SERIALNO, CATEGORY_PARENTID, 
+    CATEGORY_DESCRIPTION
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.category.AdvCategoryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_CATEGORY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_CATEGORY
+    where CATEGORY_ID = #{categoryId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_CATEGORY
+    where CATEGORY_ID = #{categoryId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.category.AdvCategoryExample" >
+    delete from ADV_CATEGORY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.category.AdvCategory" >
+    <selectKey resultType="java.lang.String" keyProperty="categoryId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_CATEGORY (CATEGORY_ID, CATEGORY_CODE, CATEGORY_NAME, 
+      CATEGORY_SERIALNO, CATEGORY_PARENTID, CATEGORY_DESCRIPTION
+      )
+    values (#{categoryId,jdbcType=VARCHAR}, #{categoryCode,jdbcType=VARCHAR}, #{categoryName,jdbcType=VARCHAR}, 
+      #{categorySerialno,jdbcType=VARCHAR}, #{categoryParentid,jdbcType=VARCHAR}, #{categoryDescription,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.category.AdvCategory" >
+    <selectKey resultType="java.lang.String" keyProperty="categoryId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_CATEGORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      CATEGORY_ID,
+      <if test="categoryCode != null" >
+        CATEGORY_CODE,
+      </if>
+      <if test="categoryName != null" >
+        CATEGORY_NAME,
+      </if>
+      <if test="categorySerialno != null" >
+        CATEGORY_SERIALNO,
+      </if>
+      <if test="categoryParentid != null" >
+        CATEGORY_PARENTID,
+      </if>
+      <if test="categoryDescription != null" >
+        CATEGORY_DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{categoryId,jdbcType=VARCHAR},
+      <if test="categoryCode != null" >
+        #{categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryName != null" >
+        #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySerialno != null" >
+        #{categorySerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryParentid != null" >
+        #{categoryParentid,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryDescription != null" >
+        #{categoryDescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.category.AdvCategoryExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_CATEGORY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_CATEGORY
+    <set >
+      <if test="record.categoryId != null" >
+        CATEGORY_ID = #{record.categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryCode != null" >
+        CATEGORY_CODE = #{record.categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryName != null" >
+        CATEGORY_NAME = #{record.categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categorySerialno != null" >
+        CATEGORY_SERIALNO = #{record.categorySerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryParentid != null" >
+        CATEGORY_PARENTID = #{record.categoryParentid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryDescription != null" >
+        CATEGORY_DESCRIPTION = #{record.categoryDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_CATEGORY
+    set CATEGORY_ID = #{record.categoryId,jdbcType=VARCHAR},
+      CATEGORY_CODE = #{record.categoryCode,jdbcType=VARCHAR},
+      CATEGORY_NAME = #{record.categoryName,jdbcType=VARCHAR},
+      CATEGORY_SERIALNO = #{record.categorySerialno,jdbcType=VARCHAR},
+      CATEGORY_PARENTID = #{record.categoryParentid,jdbcType=VARCHAR},
+      CATEGORY_DESCRIPTION = #{record.categoryDescription,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.category.AdvCategory" >
+    update ADV_CATEGORY
+    <set >
+      <if test="categoryCode != null" >
+        CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryName != null" >
+        CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySerialno != null" >
+        CATEGORY_SERIALNO = #{categorySerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryParentid != null" >
+        CATEGORY_PARENTID = #{categoryParentid,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryDescription != null" >
+        CATEGORY_DESCRIPTION = #{categoryDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CATEGORY_ID = #{categoryId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.category.AdvCategory" >
+    update ADV_CATEGORY
+    set CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+      CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+      CATEGORY_SERIALNO = #{categorySerialno,jdbcType=VARCHAR},
+      CATEGORY_PARENTID = #{categoryParentid,jdbcType=VARCHAR},
+      CATEGORY_DESCRIPTION = #{categoryDescription,jdbcType=VARCHAR}
+    where CATEGORY_ID = #{categoryId,jdbcType=VARCHAR}
+  </update>
+</mapper>

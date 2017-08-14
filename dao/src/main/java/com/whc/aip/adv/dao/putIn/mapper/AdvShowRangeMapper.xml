@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.putIn.AdvShowRangeMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.putIn.AdvShowRange" >
+    <id column="SHOWRANGE_ID" property="showrangeId" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+    <result column="SHOWRANGE_WAHOID" property="showrangeWahoId" jdbcType="VARCHAR" />
+    <result column="SHOWRANGE_PROPERTYTYPE" property="showrangePropertytype" jdbcType="VARCHAR" />
+    <result column="SHOWRANGE_PRINCE" property="showrangePrince" jdbcType="VARCHAR" />
+    <result column="SHOWRANGE_CITY" property="showrangeCity" jdbcType="VARCHAR" />
+    <result column="SHOWRANGE_DESCRIPTION" property="showrangeDescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    SHOWRANGE_ID, ACTIVITY_ID, SHOWRANGE_WAHOID, SHOWRANGE_PROPERTYTYPE, SHOWRANGE_PRINCE, 
+    SHOWRANGE_CITY, SHOWRANGE_DESCRIPTION
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.putIn.AdvShowRangeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_SHOWRANGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_SHOWRANGE
+    where SHOWRANGE_ID = #{showrangeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_SHOWRANGE
+    where SHOWRANGE_ID = #{showrangeId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.putIn.AdvShowRangeExample" >
+    delete from ADV_SHOWRANGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.putIn.AdvShowRange" >
+    <selectKey resultType="java.lang.String" keyProperty="showrangeId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_SHOWRANGE (SHOWRANGE_ID, ACTIVITY_ID, SHOWRANGE_WAHOID, 
+      SHOWRANGE_PROPERTYTYPE, SHOWRANGE_PRINCE, 
+      SHOWRANGE_CITY, SHOWRANGE_DESCRIPTION)
+    values (#{showrangeId,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{showrangeWahoId,jdbcType=VARCHAR}, 
+      #{showrangePropertytype,jdbcType=VARCHAR}, #{showrangePrince,jdbcType=VARCHAR}, 
+      #{showrangeCity,jdbcType=VARCHAR}, #{showrangeDescription,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.putIn.AdvShowRange" >
+    <selectKey resultType="java.lang.String" keyProperty="showrangeId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_SHOWRANGE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      SHOWRANGE_ID,
+      <if test="activityId != null" >
+        ACTIVITY_ID,
+      </if>
+      <if test="showrangeWahoId != null" >
+        SHOWRANGE_WAHOID,
+      </if>
+      <if test="showrangePropertytype != null" >
+        SHOWRANGE_PROPERTYTYPE,
+      </if>
+      <if test="showrangePrince != null" >
+        SHOWRANGE_PRINCE,
+      </if>
+      <if test="showrangeCity != null" >
+        SHOWRANGE_CITY,
+      </if>
+      <if test="showrangeDescription != null" >
+        SHOWRANGE_DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{showrangeId,jdbcType=VARCHAR},
+      <if test="activityId != null" >
+        #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangeWahoId != null" >
+        #{showrangeWahoId,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangePropertytype != null" >
+        #{showrangePropertytype,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangePrince != null" >
+        #{showrangePrince,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangeCity != null" >
+        #{showrangeCity,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangeDescription != null" >
+        #{showrangeDescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.putIn.AdvShowRangeExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_SHOWRANGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_SHOWRANGE
+    <set >
+      <if test="record.showrangeId != null" >
+        SHOWRANGE_ID = #{record.showrangeId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityId != null" >
+        ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showrangeWahoId != null" >
+        SHOWRANGE_WAHOID = #{record.showrangeWahoId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showrangePropertytype != null" >
+        SHOWRANGE_PROPERTYTYPE = #{record.showrangePropertytype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showrangePrince != null" >
+        SHOWRANGE_PRINCE = #{record.showrangePrince,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showrangeCity != null" >
+        SHOWRANGE_CITY = #{record.showrangeCity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showrangeDescription != null" >
+        SHOWRANGE_DESCRIPTION = #{record.showrangeDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_SHOWRANGE
+    set SHOWRANGE_ID = #{record.showrangeId,jdbcType=VARCHAR},
+      ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      SHOWRANGE_WAHOID = #{record.showrangeWahoId,jdbcType=VARCHAR},
+      SHOWRANGE_PROPERTYTYPE = #{record.showrangePropertytype,jdbcType=VARCHAR},
+      SHOWRANGE_PRINCE = #{record.showrangePrince,jdbcType=VARCHAR},
+      SHOWRANGE_CITY = #{record.showrangeCity,jdbcType=VARCHAR},
+      SHOWRANGE_DESCRIPTION = #{record.showrangeDescription,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.putIn.AdvShowRange" >
+    update ADV_SHOWRANGE
+    <set >
+      <if test="activityId != null" >
+        ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangeWahoId != null" >
+        SHOWRANGE_WAHOID = #{showrangeWahoId,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangePropertytype != null" >
+        SHOWRANGE_PROPERTYTYPE = #{showrangePropertytype,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangePrince != null" >
+        SHOWRANGE_PRINCE = #{showrangePrince,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangeCity != null" >
+        SHOWRANGE_CITY = #{showrangeCity,jdbcType=VARCHAR},
+      </if>
+      <if test="showrangeDescription != null" >
+        SHOWRANGE_DESCRIPTION = #{showrangeDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SHOWRANGE_ID = #{showrangeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.putIn.AdvShowRange" >
+    update ADV_SHOWRANGE
+    set ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      SHOWRANGE_WAHOID = #{showrangeWahoId,jdbcType=VARCHAR},
+      SHOWRANGE_PROPERTYTYPE = #{showrangePropertytype,jdbcType=VARCHAR},
+      SHOWRANGE_PRINCE = #{showrangePrince,jdbcType=VARCHAR},
+      SHOWRANGE_CITY = #{showrangeCity,jdbcType=VARCHAR},
+      SHOWRANGE_DESCRIPTION = #{showrangeDescription,jdbcType=VARCHAR}
+    where SHOWRANGE_ID = #{showrangeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

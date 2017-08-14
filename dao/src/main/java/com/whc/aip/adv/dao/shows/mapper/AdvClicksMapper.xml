@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whc.aip.adv.dao.shows.AdvClicksMapper" >
+  <resultMap id="BaseResultMap" type="com.whc.aip.adv.model.shows.AdvClicks" >
+    <id column="CLICKS_ID" property="clicksId" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+    <result column="CONTENT_ID" property="contentId" jdbcType="VARCHAR" />
+    <result column="CLICKS_USERID" property="clicksUserId" jdbcType="VARCHAR" />
+    <result column="CLICKS_PHONETYPE" property="clicksPhonetype" jdbcType="VARCHAR" />
+    <result column="CLICKS_USERIP" property="clicksUserIp" jdbcType="VARCHAR" />
+    <result column="CLICKS_WAHOCEID" property="clicksWahoceId" jdbcType="VARCHAR" />
+    <result column="CLICKS_TIME" property="clicksTime" jdbcType="VARCHAR" />
+    <result column="CLICKS_TELRESERVECOUNT" property="clicksTelreservecount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CLICKS_ID, ACTIVITY_ID, CONTENT_ID, CLICKS_USERID, CLICKS_PHONETYPE, CLICKS_USERIP, 
+    CLICKS_WAHOCEID, CLICKS_TIME, CLICKS_TELRESERVECOUNT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whc.aip.adv.model.shows.AdvClicksExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ADV_CLICKS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ADV_CLICKS
+    where CLICKS_ID = #{clicksId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ADV_CLICKS
+    where CLICKS_ID = #{clicksId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whc.aip.adv.model.shows.AdvClicksExample" >
+    delete from ADV_CLICKS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whc.aip.adv.model.shows.AdvClicks" >
+    <selectKey resultType="java.lang.String" keyProperty="clicksId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_CLICKS (CLICKS_ID, ACTIVITY_ID, CONTENT_ID, 
+      CLICKS_USERID, CLICKS_PHONETYPE, CLICKS_USERIP, 
+      CLICKS_WAHOCEID, CLICKS_TIME, CLICKS_TELRESERVECOUNT
+      )
+    values (#{clicksId,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{contentId,jdbcType=VARCHAR}, 
+      #{clicksUserId,jdbcType=VARCHAR}, #{clicksPhonetype,jdbcType=VARCHAR}, #{clicksUserIp,jdbcType=VARCHAR}, 
+      #{clicksWahoceId,jdbcType=VARCHAR}, #{clicksTime,jdbcType=VARCHAR}, #{clicksTelreservecount,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.whc.aip.adv.model.shows.AdvClicks" >
+    <selectKey resultType="java.lang.String" keyProperty="clicksId" order="BEFORE" >
+      select sys_guid() from dual
+    </selectKey>
+    insert into ADV_CLICKS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      CLICKS_ID,
+      <if test="activityId != null" >
+        ACTIVITY_ID,
+      </if>
+      <if test="contentId != null" >
+        CONTENT_ID,
+      </if>
+      <if test="clicksUserId != null" >
+        CLICKS_USERID,
+      </if>
+      <if test="clicksPhonetype != null" >
+        CLICKS_PHONETYPE,
+      </if>
+      <if test="clicksUserIp != null" >
+        CLICKS_USERIP,
+      </if>
+      <if test="clicksWahoceId != null" >
+        CLICKS_WAHOCEID,
+      </if>
+      <if test="clicksTime != null" >
+        CLICKS_TIME,
+      </if>
+      <if test="clicksTelreservecount != null" >
+        CLICKS_TELRESERVECOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{clicksId,jdbcType=VARCHAR},
+      <if test="activityId != null" >
+        #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentId != null" >
+        #{contentId,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksUserId != null" >
+        #{clicksUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksPhonetype != null" >
+        #{clicksPhonetype,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksUserIp != null" >
+        #{clicksUserIp,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksWahoceId != null" >
+        #{clicksWahoceId,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksTime != null" >
+        #{clicksTime,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksTelreservecount != null" >
+        #{clicksTelreservecount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whc.aip.adv.model.shows.AdvClicksExample" resultType="java.lang.Integer" >
+    select count(*) from ADV_CLICKS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ADV_CLICKS
+    <set >
+      <if test="record.clicksId != null" >
+        CLICKS_ID = #{record.clicksId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityId != null" >
+        ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentId != null" >
+        CONTENT_ID = #{record.contentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clicksUserId != null" >
+        CLICKS_USERID = #{record.clicksUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clicksPhonetype != null" >
+        CLICKS_PHONETYPE = #{record.clicksPhonetype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clicksUserIp != null" >
+        CLICKS_USERIP = #{record.clicksUserIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clicksWahoceId != null" >
+        CLICKS_WAHOCEID = #{record.clicksWahoceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clicksTime != null" >
+        CLICKS_TIME = #{record.clicksTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clicksTelreservecount != null" >
+        CLICKS_TELRESERVECOUNT = #{record.clicksTelreservecount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ADV_CLICKS
+    set CLICKS_ID = #{record.clicksId,jdbcType=VARCHAR},
+      ACTIVITY_ID = #{record.activityId,jdbcType=VARCHAR},
+      CONTENT_ID = #{record.contentId,jdbcType=VARCHAR},
+      CLICKS_USERID = #{record.clicksUserId,jdbcType=VARCHAR},
+      CLICKS_PHONETYPE = #{record.clicksPhonetype,jdbcType=VARCHAR},
+      CLICKS_USERIP = #{record.clicksUserIp,jdbcType=VARCHAR},
+      CLICKS_WAHOCEID = #{record.clicksWahoceId,jdbcType=VARCHAR},
+      CLICKS_TIME = #{record.clicksTime,jdbcType=VARCHAR},
+      CLICKS_TELRESERVECOUNT = #{record.clicksTelreservecount,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whc.aip.adv.model.shows.AdvClicks" >
+    update ADV_CLICKS
+    <set >
+      <if test="activityId != null" >
+        ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentId != null" >
+        CONTENT_ID = #{contentId,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksUserId != null" >
+        CLICKS_USERID = #{clicksUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksPhonetype != null" >
+        CLICKS_PHONETYPE = #{clicksPhonetype,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksUserIp != null" >
+        CLICKS_USERIP = #{clicksUserIp,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksWahoceId != null" >
+        CLICKS_WAHOCEID = #{clicksWahoceId,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksTime != null" >
+        CLICKS_TIME = #{clicksTime,jdbcType=VARCHAR},
+      </if>
+      <if test="clicksTelreservecount != null" >
+        CLICKS_TELRESERVECOUNT = #{clicksTelreservecount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CLICKS_ID = #{clicksId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whc.aip.adv.model.shows.AdvClicks" >
+    update ADV_CLICKS
+    set ACTIVITY_ID = #{activityId,jdbcType=VARCHAR},
+      CONTENT_ID = #{contentId,jdbcType=VARCHAR},
+      CLICKS_USERID = #{clicksUserId,jdbcType=VARCHAR},
+      CLICKS_PHONETYPE = #{clicksPhonetype,jdbcType=VARCHAR},
+      CLICKS_USERIP = #{clicksUserIp,jdbcType=VARCHAR},
+      CLICKS_WAHOCEID = #{clicksWahoceId,jdbcType=VARCHAR},
+      CLICKS_TIME = #{clicksTime,jdbcType=VARCHAR},
+      CLICKS_TELRESERVECOUNT = #{clicksTelreservecount,jdbcType=VARCHAR}
+    where CLICKS_ID = #{clicksId,jdbcType=VARCHAR}
+  </update>
+</mapper>

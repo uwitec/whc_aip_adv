@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!--property文件属性解密-->
+    <bean id="propertyConfigurer" class="com.wanhuchina.common.util.zk.ZookeeperPropertySupport">
+        <property name="locations">
+            <list>
+                <value>classpath*:zk.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+    <!-- 读数据源 -->
+    <bean id="read" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName}"></property>
+        <property name="jdbcUrl" value="${jdbc.url}"></property>
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}"></property>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+        <property name="maxIdleTime" value="${jdbc.maxIdleTime}"></property>
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}"></property>
+        <property name="maxStatements" value="${jdbc.maxStatements}"></property>
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"></property>
+        <property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"></property>
+        <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}"></property>
+        <property name="breakAfterAcquireFailure">
+            <value>false</value>
+        </property>
+        <property name="testConnectionOnCheckout">
+            <value>false</value>
+        </property>
+        <!--重新尝试的时间间隔，默认为：1000毫秒-->
+        <property name="acquireRetryDelay" value="1000"/>
+    </bean>
+
+    <!-- 写数据源 -->
+    <bean id="write" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName}"></property>
+        <property name="jdbcUrl" value="${jdbc.write.url}"></property>
+        <property name="user" value="${jdbc.write.username}"></property>
+        <property name="password" value="${jdbc.write.password}"></property>
+        <property name="minPoolSize" value="${jdbc.write.minPoolSize}"></property>
+        <property name="maxPoolSize" value="${jdbc.write.maxPoolSize}"></property>
+        <property name="maxIdleTime" value="${jdbc.write.maxIdleTime}"></property>
+        <property name="acquireIncrement" value="${jdbc.write.acquireIncrement}"></property>
+        <property name="maxStatements" value="${jdbc.write.maxStatements}"></property>
+        <property name="initialPoolSize" value="${jdbc.write.initialPoolSize}"></property>
+        <property name="idleConnectionTestPeriod" value="${jdbc.write.idleConnectionTestPeriod}"></property>
+        <property name="acquireRetryAttempts" value="${jdbc.write.acquireRetryAttempts}"></property>
+        <property name="breakAfterAcquireFailure">
+            <value>false</value>
+        </property>
+        <property name="testConnectionOnCheckout">
+            <value>false</value>
+        </property>
+        <!--重新尝试的时间间隔，默认为：1000毫秒-->
+        <property name="acquireRetryDelay" value="1000"/>
+    </bean>
+
+    <!-- 动态多数据源配置 -->
+    <bean id="dataSource" class="com.wanhuchina.common.util.datasource.RWDataSource" primary="true">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="read" key="read"></entry>
+                <entry value-ref="write" key="write"></entry>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="write"></property>
+    </bean>
+
+    <!--mybatis-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:com/whc/aip/adv/dao/activity/mapper/AdvActivityMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/category/mapper/AdvCategoryMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/content/mapper/advContentMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/position/mapper/AdvPositionMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/putIn/mapper/AdvShowRangeMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/putIn/mapper/AdvShowTimeMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/shows/mapper/AdvClicksMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/shows/mapper/AdvShowsMapper.xml</value>
+                <value>classpath:com/whc/aip/adv/dao/adv/mapper/AdvOwnMapper.xml</value>
+            </array>
+        </property>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--使用下面的方式配置参数，一行配置一个 -->
+                        <value>
+                            helperDialect=mysql
+                            offsetAsPageNum=true
+                            rowBoundsWithCount=true
+                            params=pageNum=pageIndex;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero
+                            supportMethodsArguments=true
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <property name="basePackage" value="com.whc.aip.adv.dao"/>
+    </bean>
+</beans>

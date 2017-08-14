@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date %-5level [%thread] %logger{36} [%line] - %msg %n
+			</Pattern>
+		</layout>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>TRACE</level>
+		</filter>
+	</appender>
+	
+	<!-- 演示按时间滚动的策略 -->
+  	<appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>/opt/whc/logs/api-adv.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		    <!-- daily rollover -->
+			<FileNamePattern>/opt/whc/logs/dubbo-adv.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!-- 保留 30天数据，默认无限-->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%date %-5level [%thread] %logger{35} [%line] - %msg %n</Pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+  	</appender>
+	<!--日志级别-->
+	<root>
+		<level value="DEBUG" />
+		<appender-ref ref="consoleAppender" />
+		<appender-ref ref="dailyRollingFileAppender"/>
+	</root>
+</configuration>
